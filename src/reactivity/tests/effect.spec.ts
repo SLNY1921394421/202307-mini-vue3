@@ -1,7 +1,7 @@
 import { effect, stop } from "../effect";
 import { reactive } from "../reactive";
-describe.skip("effect", () => {
-  it.skip("happy path", () => {
+describe("effect", () => {
+  it("happy path", () => {
     const user = reactive({
       age: 10,
     })
@@ -26,7 +26,7 @@ describe.skip("effect", () => {
     const r = runner();
     expect(foo).toBe(12);
     expect(r).toBe("foo");
-  })
+  });
   it("scheduler", () => {
     let dummy;
     let run: any;
@@ -70,7 +70,7 @@ describe.skip("effect", () => {
     expect(dummy).toBe(3);
   });
 
-  /* it("events: onStop", () => {
+  it("events: onStop", () => {
     const onStop = jest.fn();
     const runner = effect(() => {}, {
       onStop,
@@ -78,5 +78,5 @@ describe.skip("effect", () => {
 
     stop(runner);
     expect(onStop).toHaveBeenCalled();
-  }); */
+  });
 });

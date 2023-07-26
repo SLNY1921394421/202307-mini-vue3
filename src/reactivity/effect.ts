@@ -1,5 +1,8 @@
 import { extend } from "../../shared";
 
+let activeEffect;
+let shouldTrack;
+
 class ActiveEffect {
   private _fn: any;
   deps = [];
@@ -11,8 +14,15 @@ class ActiveEffect {
     this.scheduler = scheduler
   }
   run() {
+    if(!this.active) {
+      return this._fn()
+    }
+    shouldTrack = true
     activeEffect = this;
-    return this._fn()
+    const result = this._fn()
+    shouldTrack = false
+    return result;
+    
   }
   stop() {
     if(this.active) {
@@ -29,9 +39,9 @@ export const cleanupEffect = (effect) => {
   effect.deps.forEach((dep: any) => {
     dep.delete(effect)
   });
+  effect.deps.length = 0
 }
 
-let activeEffect;
 export const effect = (fn, options: any = {}) => {
   const scheduler = options.scheduler
   const _effect = new ActiveEffect(fn, scheduler)
@@ -50,6 +60,9 @@ export const stop = (runner) => {
 // 收集依赖
 const targetMap = new Map()
 export const track = (target, key) => {
+  // if(!activeEffect) return;
+  // if(!shouldTrack) return;
+  if(!isTracking()) return
   // target->key->dep
   let depsMap = targetMap.get(target)
   if(!depsMap) {
@@ -63,7 +76,7 @@ export const track = (target, key) => {
     depsMap.set(key, dep)
   }
 
-  if(!activeEffect) return;
+  if(dep.has(activeEffect)) return;
   dep.add(activeEffect)
   activeEffect.deps.push(dep)
 }
@@ -80,4 +93,8 @@ export const trigger = (target, key) => {
     }
     
   }
+}
+
+function isTracking() {
+  return shouldTrack && activeEffect !== undefined
 }
