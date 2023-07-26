@@ -1,6 +1,6 @@
 class ActiveEffect {
   private _fn: any;
-  constructor(fn) {
+  constructor(fn, public scheduler?) {
     this._fn = fn
   }
   run() {
@@ -9,10 +9,12 @@ class ActiveEffect {
 }
 
 let activeEffect;
-export const effect = (fn) => {
-  const _effect = new ActiveEffect(fn)
+export const effect = (fn, options: any = {}) => {
+  const scheduler = options.scheduler
+  const _effect = new ActiveEffect(fn, scheduler)
   _effect.run()
-  return activeEffect
+  const runner = _effect.run.bind(activeEffect)
+  return runner
 }
 
 // 收集依赖
@@ -38,6 +40,11 @@ export const trigger = (target, key) => {
   const depsMap = targetMap.get(target)
   const dep = depsMap.get(key)
   for (const effect of dep) {
-    effect.run()
+    if(effect.scheduler) {
+      effect.scheduler()
+    } else {
+      effect.run()
+    }
+    
   }
 }
