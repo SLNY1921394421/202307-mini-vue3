@@ -4,7 +4,7 @@ class ActiveEffect {
     this._fn = fn
   }
   run() {
-    this._fn()
+    return this._fn()
   }
 }
 
@@ -12,6 +12,7 @@ let activeEffect;
 export const effect = (fn) => {
   const _effect = new ActiveEffect(fn)
   _effect.run()
+  return activeEffect
 }
 
 // 收集依赖
