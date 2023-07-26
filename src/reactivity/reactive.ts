@@ -30,3 +30,7 @@ export const isReadonly = (value) => {
 export const shallowReadonly = (target) => {
   return createReactiveObject(target, shallowReadonlyHandlers)
 }
+
+export const isProxy = (value) => {
+  return isReactive(value) || isReadonly(value)
+}
