@@ -76,6 +76,10 @@ export const track = (target, key) => {
     depsMap.set(key, dep)
   }
 
+  trackEffects(dep)
+}
+
+export const trackEffects = (dep) => {
   if(dep.has(activeEffect)) return;
   dep.add(activeEffect)
   activeEffect.deps.push(dep)
@@ -85,6 +89,10 @@ export const track = (target, key) => {
 export const trigger = (target, key) => {
   const depsMap = targetMap.get(target)
   const dep = depsMap.get(key)
+  triggerRefValue(dep)
+}
+
+export const triggerRefValue = (dep) => {
   for (const effect of dep) {
     if(effect.scheduler) {
       effect.scheduler()
@@ -95,6 +103,6 @@ export const trigger = (target, key) => {
   }
 }
 
-function isTracking() {
+export const isTracking = () => {
   return shouldTrack && activeEffect !== undefined
 }
