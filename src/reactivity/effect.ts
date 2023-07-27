@@ -1,4 +1,5 @@
 import { extend } from "../../shared";
+import { isRef } from "./ref";
 
 let activeEffect;
 let shouldTrack;
