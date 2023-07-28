@@ -8,6 +8,12 @@ export const App = {
       {
         id: 'root',
         class: ['red', 'blue'],
+        onClick() {
+          console.log('onclick事件 ');
+        },
+        onMousedown() {
+          console.log('onclick事件 ');
+        }
       },
       // String
       'hello ' + this.msg
