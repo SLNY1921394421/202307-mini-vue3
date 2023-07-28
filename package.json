@@ -1,7 +1,8 @@
 {
   "name": "202307-mini-vue3",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/mini-vue3.cjs.js",
+  "module": "lib/mini-vue3.esm.js",
   "license": "MIT",
   "type": "module",
   "scripts": {

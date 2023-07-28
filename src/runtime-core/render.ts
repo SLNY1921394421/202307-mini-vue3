@@ -5,7 +5,7 @@ export function render(vnode, container) {
 }
 
 export function patch(vnode, container) {
-
+  processElement()
   processComponent(vnode, container);
 }
 
@@ -21,5 +21,8 @@ function mountComponent(vnode: any, container: any) {
 function setupRenderEffect(instance: any, container) {
   const subTree = instance.render();
   patch(subTree, container)
+}
+
+function processElement() {
 }
 
