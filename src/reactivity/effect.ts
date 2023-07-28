@@ -4,7 +4,7 @@ import { isRef } from "./ref";
 let activeEffect;
 let shouldTrack;
 
-class ActiveEffect {
+export class ActiveEffect {
   private _fn: any;
   deps = [];
   active = true;
