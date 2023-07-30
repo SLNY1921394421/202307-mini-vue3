@@ -1,3 +1,4 @@
+import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandles } from "./componentPublicInstance";
 
@@ -6,8 +7,10 @@ export function createComponentInstance(vnode: any) {
     vnode,
     type: vnode.type,
     setupState: {},
-    props: {}
+    props: {},
+    emit: () => {}
   }
+  component.emit = emit.bind(null, component) as any
   return component;
 }
 
@@ -23,7 +26,7 @@ function setupStatefulComponent(instance: any) {
   instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandles)
   const { setup } = Component
   if(setup) {
-    const setupResult = setup(instance.props);
+    const setupResult = setup(instance.props, { emit: instance.emit });
     handleSetupResult(instance, setupResult)
   }
 }
