@@ -1,19 +1,34 @@
-// export const initSlots = (instance, children) => {
-//   const slots = {}
-//   for (const key in children) {
-//     const value = children[key]
-//     slots[key] = Array.isArray(value) ? value : [value]
-//   }
-//   instance.slots = slots
-
 import { ShapeFlags } from "../../shared/shapeFlags";
+export const initSlots = (instance, children) => {
+  // instance.slots = Array.isArray(children) ? children : [children]
+  // const slots = {}
+  // for (const key in children) {
+  //   const value = children[key]
+  //   slots[key] = normalizeSlotValue(value)
+  // }
+  // instance.slots = slots
 
-// }
-export function initSlots(instance, children) {
+  const { vnode } = instance
+  if(vnode.shapeFlag & ShapeFlags.SLOTS_CHILDREN) {
+    normalizeObjectSlots(children, instance.slots)
+  }
+
+  
+
+  
+}
+const normalizeObjectSlots = (children, slots) => {
+  for (const key in children) {
+    const value = children[key]
+    slots[key] = (props) => normalizeSlotValue(value(props))
+  }
+  slots = slots
+}
+
+
+
+export function initSlots1(instance, children) {
   const { vnode } = instance;
-
-  console.log("初始化 slots");
-  debugger
 
   if (vnode.shapeFlag & ShapeFlags.SLOTS_CHILDREN) {
     normalizeObjectSlots(children, (instance.slots = {}));
@@ -25,7 +40,7 @@ const normalizeSlotValue = (value) => {
   return Array.isArray(value) ? value : [value];
 };
 
-const normalizeObjectSlots = (rawSlots, slots) => {
+const normalizeObjectSlots1 = (rawSlots, slots) => {
   for (const key in rawSlots) {
     const value = rawSlots[key];
     if (typeof value === "function") {
