@@ -1,5 +1,8 @@
 import { ShapeFlags } from "../../shared/shapeFlags";
 
+export const Fragment = Symbol("Fragment");
+export const Text = Symbol("Text");
+
 export function createVnode(type, props?, children?) {
   const vnode = {
     type,
@@ -25,6 +28,10 @@ export function createVnode(type, props?, children?) {
 
 
   return vnode
+}
+
+export const createTextVNode = (text) => {
+  return createVnode(Text, {}, text)
 }
 
 // 基于 type 来判断是什么类型的组件

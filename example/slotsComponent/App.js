@@ -1,4 +1,4 @@
-import { h } from "../../lib/mini-vue3.esm.js";
+import { h, createTextVNode } from "../../lib/mini-vue3.esm.js";
 import Child from "./Child.js";
 
 export default {
@@ -13,7 +13,7 @@ export default {
       // h("p", {}, "123")
       // [h("p", {}, "123"),h("p", {}, "456")]
       {
-        header: ({ age }) => h("p", {}, "header" + age),
+        header: ({ age }) => [h("p", {}, "header" + age), createTextVNode("你好")],
         footer: () => h("p", {}, "footer"),
       }
     );
