@@ -53,7 +53,10 @@ function processElement(vnode: any, container: any, parentComponent) {
 }
 
 function mountElement(vnode: any, container: any, parentComponent) {
+  
   const el = (vnode.el = document.createElement(vnode.type));
+  // const el = (vnode.el = createElement(vnode.type));
+
 
   const { children, shapeFlag } = vnode;
   if(shapeFlag & ShapeFlags.TEXT_CHILDREN) {
@@ -72,9 +75,11 @@ function mountElement(vnode: any, container: any, parentComponent) {
     } else {
       el.setAttribute(key, val);
     }
+    // patchProps(el, key, val)
   }
 
   container.append(el);
+  // insert(el, container)
 }
 
 function mountChildren(vnode, container, parentComponent) {
