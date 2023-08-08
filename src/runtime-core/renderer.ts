@@ -131,7 +131,7 @@ export function createRenderer(options) {
     let e1 = c1.length - 1;
     let e2 = l2 - 1;
 
-    function isSomeVNodeType(n1, n2) {
+    function isSameVNodeType(n1, n2) {
       return n1.type === n2.type && n1.key === n2.key
     }
 
@@ -139,7 +139,7 @@ export function createRenderer(options) {
     while (i <= e1 && i <= e2) {
       const n1 = c1[i];
       const n2 = c2[i];
-      if(isSomeVNodeType(n1, n2)) {
+      if(isSameVNodeType(n1, n2)) {
         patch(n1, n2, container, parentComponent, parentAnchor)
       } else {
         break;
@@ -152,7 +152,7 @@ export function createRenderer(options) {
     while (i <= e1 && i <= e2) {
       const n1 = c1[e1];
       const n2 = c2[e2];
-      if(isSomeVNodeType(n1, n2)) {
+      if(isSameVNodeType(n1, n2)) {
         patch(n1, n2, container, parentComponent, parentAnchor)
       } else {
         break;
@@ -177,7 +177,45 @@ export function createRenderer(options) {
         i++
       }
     } else {
-      // 乱序
+      // 中间
+      const s1 = i;
+      const s2 = i;
+      const toBePatched = e2 - s2 + 1;
+      let patched = 0;
+
+      const keyToNewIndexMap = new Map();
+
+      for (let i = 0; i <= e2; i++) {
+        keyToNewIndexMap.set(c2[i].key, i)
+      }
+
+      
+      for (let i = s1; i <= e1; i++) {
+        const prevChild = c1[i];
+        let newIndex;
+
+        if (patched >= toBePatched) {
+          hostRemove(prevChild.el)
+          continue;
+        }
+        if (prevChild.key != null) {
+          newIndex = keyToNewIndexMap.get(prevChild.key)
+        } else {
+          for (let j = s2; j <= e2; j++) {
+            if (isSameVNodeType(prevChild, c2[j])) {
+              newIndex = j
+              break
+            }
+          }
+        }
+
+        if(newIndex === undefined) {
+          hostRemove(prevChild.el);
+        } else {
+          patch(prevChild, c2[newIndex], container,parentComponent, null);
+          patched++;
+        }
+      }
     }
   }
 
