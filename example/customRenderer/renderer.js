@@ -10,8 +10,8 @@ const renderer = createRenderer({
     return rect;
   },
 
-  patchProp(el, key, prevValue, nextValue) {
-    el[key] = nextValue;
+  patchProp(el, key, value) {
+    el[key] = value;
   },
 
   insert(el, parent) {
