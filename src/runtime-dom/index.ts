@@ -1,9 +1,9 @@
-import { creatRenderer } from '../runtime-core'
+import { createRenderer } from '../runtime-core'
 function createElement(type) {
   return document.createElement(type);
 }
 
-function patchProps(el, key, val) {
+function patchProp(el, key, val) {
   const isOn = (key: string) => /^on[A-Z]/.test(key)
     if(isOn(key)) {
       const event = key.slice(2).toLowerCase();
@@ -17,9 +17,9 @@ function insert(el, parent) {
   parent.append(el)
 }
 
-const renderer: any = creatRenderer({
+const renderer: any = createRenderer({
   createElement,
-  patchProps,
+  patchProp,
   insert,
 })
 

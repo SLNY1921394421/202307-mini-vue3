@@ -2,8 +2,8 @@ import { ShapeFlags } from "../../shared/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { createAppAPI } from "./createApp";
 import { Fragment, Text } from "./vnode";
-export function creatRenderer(options) {
-  const { createElement, patchProps, insert } = options
+export function createRenderer(options) {
+  const { createElement, patchProp, insert } = options
 
   function render( vnode, container) {
     patch(vnode, container, null)
@@ -77,7 +77,7 @@ export function creatRenderer(options) {
       // } else {
       //   el.setAttribute(key, val);
       // }
-      patchProps(el, key, val)
+      patchProp(el, key, val)
     }
 
     // container.append(el);
