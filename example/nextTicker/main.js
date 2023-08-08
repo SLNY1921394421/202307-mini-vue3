@@ -1,12 +1,12 @@
 /*
  * @Author: Lqf
- * @Date: 2021-12-29 23:18:10
+ * @Date: 2022-01-05 22:11:09
  * @LastEditors: Lqf
- * @LastEditTime: 2021-12-29 23:19:22
+ * @LastEditTime: 2022-01-05 22:11:11
  * @Description: 我添加了修改
  */
 import { createApp } from "../../lib/mini-vue3.esm.js"
-import { App } from "./App.js"
+import App from "./App.js"
 
-const rootContainer = document.querySelector("#app")
+const rootContainer = document.querySelector("#root")
 createApp(App).mount(rootContainer)
