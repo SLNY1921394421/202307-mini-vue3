@@ -54,10 +54,16 @@ describe("parser", () => {
         content: {
           type: NodeTypes.SIMPLE_EXPRESSION,
           content: `message`,
-        },
+        }
+        // type: NodeTypes.INTERPOLATION,
+        // content: {
+        //   type: NodeTypes.SIMPLE_EXPRESSION,
+        //   content: `message`,
+        // },
       });
     });
   });
+  
 
  /*  describe("Element", () => {
     test("simple div", () => {
