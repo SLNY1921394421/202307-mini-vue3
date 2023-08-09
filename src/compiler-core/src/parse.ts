@@ -1,31 +1,9 @@
-// export function baseParse(content: string) {
-//   const context = createParserContext(content);
-//   return createRoot(parseChildren(context))
-// }
-// function createRoot(children) {
-//   return {
-//     children,
-//   }
-// }
-
 import { NodeTypes } from "./ast";
 
-// function parseChildren(context) {
-//   return {
-//     type: "interpolation",
-//     content: {
-//       type: "simple_expression",
-//       content: "message",
-//     },
-//   }
-// }
-
-// function createParserContext(content) {
-//   console.log("创建 paserContext");
-//   return {
-//     source: content,
-//   };
-// }
+export const enum TagType {
+  Start,
+  End,
+}
 
 export function baseParse(content: string) {
   const context = createParseContext(content);
@@ -35,10 +13,18 @@ export function baseParse(content: string) {
 function parseChildren(context) {
   const nodes: any = [];
   let node;
+  const s = context.source;
 
-  if(context.source.startsWith("{{")) {
+  if(s.startsWith("{{")) {
     node = parseInterpolation(context)
+  } else if (s[0] === '<') {
+    // element 类型
+    if (/[a-z]/i.test(s[1])) {
+      node = parseElement(context)
+    }
   }
+
+
   nodes.push(node);
   return nodes;
 }
@@ -56,10 +42,9 @@ function parseInterpolation(context) {
   const rawContextLength = closeIndex - openDelimiter.length;
   const rawContent = context.source.slice(0, rawContextLength);
   const content = rawContent.trim();
-  console.log("content------------", content)
-  advanceBy(context, rawContextLength + closeDelimiter.length)
-  
-  console.log("context.source---------", context.source)
+
+  advanceBy(context, rawContextLength + closeDelimiter.length);
+
   return {
     type: NodeTypes.INTERPOLATION,
     content: {
@@ -82,5 +67,39 @@ function createParseContext(content: string) {
 }
 function advanceBy(context: any, length: number) {
   context.source = context.source.slice(length);
+}
+
+function parseElement(context: any) {
+  const element: any = parseTag(context, TagType.Start) // 解析出tag，并删除标签左边部分（<div>），并推进
+  
+  
+
+  // 当前结束标签和开始标签一样，那就消费这个tag
+  // if (startsWithEndTagOpen(context.source, element.tag)) {
+    parseTag(context, TagType.End) // 删除标签右边部分（</div>），并推进
+  // } else {
+  //   // 如果不相等，说明缺少结束标签
+  //   throw new Error(`缺少结束标签：${element.tag}`)
+  // }
+  return element
+}
+
+function parseTag(context: any, type: TagType) {
+  // 1.解析元素tag
+  const match: any = /^<\/?([a-z]*)/i.exec(context.source)
+  const tag = match[1] // 先默认都是能解析出来的正确代码
+
+  // 2.删除处理完成的代码，并推进
+  advanceBy(context, match[0].length) // 删除左边并推进
+  advanceBy(context, 1) // 删除右尖括号
+
+  // 如果是结束标签的话不需要返回element
+  if (type === TagType.End) {
+    return
+  }
+  return {
+    type: NodeTypes.ELEMENT,
+    tag,
+  }
 }
 

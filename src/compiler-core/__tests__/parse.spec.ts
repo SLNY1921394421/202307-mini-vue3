@@ -1,136 +1,104 @@
-// import { ElementTypes, NodeTypes } from "../src/ast";
-import { NodeTypes } from "../src/ast";
-import { baseParse } from "../src/parse";
+import { NodeTypes } from '../src/ast'
+import { baseParse } from '../src/parse'
 
-describe("parser", () => {
-  // describe("text", () => {
-  //   test("simple text", () => {
-  //     const ast = baseParse("some text");
-  //     const text = ast.children[0];
+describe('Parse', () => {
+  // 简单的插值处理{{}}
+  describe('interpolation', () => {
+    test('simple interpolation', () => {
+      const ast = baseParse('{{ message }}')
 
-  //     expect(text).toStrictEqual({
-  //       type: NodeTypes.TEXT,
-  //       content: "some text",
-  //     });
-  //   });
-
-  //   test("simple text with invalid end tag", () => {
-  //     const ast = baseParse("some text</div>");
-  //     const text = ast.children[0];
-
-  //     expect(text).toStrictEqual({
-  //       type: NodeTypes.TEXT,
-  //       content: "some text",
-  //     });
-  //   });
-
-  //   test("text with interpolation", () => {
-  //     const ast = baseParse("some {{ foo + bar }} text");
-  //     const text1 = ast.children[0];
-  //     const text2 = ast.children[2];
-
-  //     // ast.children[1] 应该是 interpolation
-  //     expect(text1).toStrictEqual({
-  //       type: NodeTypes.TEXT,
-  //       content: "some ",
-  //     });
-  //     expect(text2).toStrictEqual({
-  //       type: NodeTypes.TEXT,
-  //       content: " text",
-  //     });
-  //   });
-  // });
-
-  describe("Interpolation", () => {
-    test("simple interpolation", () => {
-      // 1. 看看是不是一个 {{ 开头的
-      // 2. 是的话，那么就作为 插值来处理
-      // 3. 获取内部 message 的内容即可
-      const ast = baseParse("{{message}}");
-      const interpolation = ast.children[0];
-
-      expect(interpolation).toStrictEqual({
+      // root
+      expect(ast.children[0]).toStrictEqual({
         type: NodeTypes.INTERPOLATION,
         content: {
           type: NodeTypes.SIMPLE_EXPRESSION,
-          content: `message`,
-        }
-        // type: NodeTypes.INTERPOLATION,
-        // content: {
-        //   type: NodeTypes.SIMPLE_EXPRESSION,
-        //   content: `message`,
-        // },
-      });
-    });
-  });
-  
+          content: 'message',
+        },
+      })
+    })
+  })
 
- /*  describe("Element", () => {
-    test("simple div", () => {
-      const ast = baseParse("<div>hello</div>");
-      const element = ast.children[0];
+  // element 类型编译
+  describe('element', () => {
+    it('simple element div', () => {
+      const ast = baseParse('<div></div>')
 
-      expect(element).toStrictEqual({
+      expect(ast.children[0]).toStrictEqual({
         type: NodeTypes.ELEMENT,
-        tag: "div",
-        tagType: ElementTypes.ELEMENT,
-        children: [
-          {
-            type: NodeTypes.TEXT,
-            content: "hello",
-          },
-        ],
-      });
-    });
+        tag: 'div',
+        // children: [],
+      })
+    })
+  })
 
-    test("element with interpolation", () => {
-      const ast = baseParse("<div>{{ msg }}</div>");
-      const element = ast.children[0];
+  // text 类型编译
+  // describe('text', () => {
+  //   it('simple text', () => {
+  //     const ast = baseParse('some text')
 
-      expect(element).toStrictEqual({
-        type: NodeTypes.ELEMENT,
-        tag: "div",
-        tagType: ElementTypes.ELEMENT,
-        children: [
-          {
-            type: NodeTypes.INTERPOLATION,
-            content: {
-              type: NodeTypes.SIMPLE_EXPRESSION,
-              content: `msg`,
-            },
-          },
-        ],
-      });
-    });
+  //     expect(ast.children[0]).toStrictEqual({
+  //       type: NodeTypes.TEXT,
+  //       content: 'some text',
+  //     })
+  //   })
+  // })
 
-    test("element with interpolation and text", () => {
-      const ast = baseParse("<div>hi,{{ msg }}</div>");
-      const element = ast.children[0];
+  // element与text以及插值混合情况
+  // test('parsing mixed cases', () => {
+  //   const ast = baseParse('<div>hi，{{ message }}</div>')
 
-      expect(element).toStrictEqual({
-        type: NodeTypes.ELEMENT,
-        tag: "div",
-        tagType: ElementTypes.ELEMENT,
-        children: [
-          {
-            type: NodeTypes.TEXT,
-            content: "hi,",
-          },
-          {
-            type: NodeTypes.INTERPOLATION,
-            content: {
-              type: NodeTypes.SIMPLE_EXPRESSION,
-              content: "msg",
-            },
-          },
-        ],
-      });
-    });
+  //   expect(ast.children[0]).toStrictEqual({
+  //     type: NodeTypes.ELEMENT,
+  //     tag: 'div',
+  //     children: [
+  //       {
+  //         type: NodeTypes.TEXT,
+  //         content: 'hi，',
+  //       },
+  //       {
+  //         type: NodeTypes.INTERPOLATION,
+  //         content: {
+  //           type: NodeTypes.SIMPLE_EXPRESSION,
+  //           content: 'message',
+  //         },
+  //       },
+  //     ],
+  //   })
+  // })
 
-    test("should throw error when lack end tag  ", () => {
-      expect(() => {
-        baseParse("<div><span></div>");
-      }).toThrow("缺失结束标签：span");
-    });
-  }); */
-});
+  // 嵌套标签
+  // test('nested element', () => {
+  //   const ast = baseParse('<div><p>hi，</p>{{ message }}</div>')
+
+  //   expect(ast.children[0]).toStrictEqual({
+  //     type: NodeTypes.ELEMENT,
+  //     tag: 'div',
+  //     children: [
+  //       {
+  //         type: NodeTypes.ELEMENT,
+  //         tag: 'p',
+  //         children: [
+  //           {
+  //             type: NodeTypes.TEXT,
+  //             content: 'hi，',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         type: NodeTypes.INTERPOLATION,
+  //         content: {
+  //           type: NodeTypes.SIMPLE_EXPRESSION,
+  //           content: 'message',
+  //         },
+  //       },
+  //     ],
+  //   })
+  // })
+
+  // 错误的模板，缺少结束标签，希望抛出错误
+  // test('should throw error when lack end tag', () => {
+  //   expect(() => {
+  //     baseParse('<div><span></div>')
+  //   }).toThrow('缺少结束标签：span')
+  // })
+})
