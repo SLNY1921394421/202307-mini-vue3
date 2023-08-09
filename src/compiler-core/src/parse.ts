@@ -27,7 +27,7 @@ export function baseParse(content: string) {
 }
 
 function parseChildren(context: any, ancestors: any[]) {
-  const nodes = []
+  const nodes: any = []
 
   while (!isEnd(context, ancestors)) {
     let node

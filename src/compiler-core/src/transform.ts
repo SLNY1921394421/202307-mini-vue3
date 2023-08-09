@@ -35,7 +35,7 @@ function createRootCodegen(root: any) {
 
 function traverseNode(node: any, context: TransformContext) {
   const nodeTransforms = context.nodeTransforms
-  const exitFns = []
+  const exitFns: any = []
 
   for (let i = 0; i < nodeTransforms.length; i++) {
     const transform = nodeTransforms[i]
