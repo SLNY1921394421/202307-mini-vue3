@@ -8,9 +8,10 @@ export function createVnode(type, props?, children?) {
     type,
     props,
     children,
+    component: null,
     key: props && props.key,
     shapeFlag: getShapeFlag(type),
-    el: null,
+    el: null
   }
 
   // 基于 children 再次设置 shapeFlag

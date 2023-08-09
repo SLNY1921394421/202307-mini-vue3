@@ -1,61 +1,64 @@
-import { hasChanged, isObject } from "../../shared";
-import { isTracking, trackEffects, triggerRefValue } from "./effect";
-import { reactive } from "./reactive";
+import { hasChanged, isObject } from "../../shared/index"
+import { isTracking, trackEffects, triggerEffects } from "./effect"
+import { reactive } from "./reactive"
 
 class RefImpl {
-  private _value: any;
-  public dep;
-  private _rawVal: any;
+  private _value: any
+  private _rawValue: any
+  public dep
   public __v_isRef = true
   constructor(value) {
-    this._rawVal = value
+    this._rawValue = value
     this._value = convert(value)
     this.dep = new Set()
   }
-  get value () {
+  get value() {
     trackRefValue(this)
-    return this._value;
+    return this._value
   }
-  set value(newVal) {
-    if(hasChanged(this._rawVal, newVal)) {
-      this._rawVal = newVal
-      this._value = convert(newVal)
-      triggerRefValue(this.dep)
+  set value(newValue) {
+    // compare object
+    if (hasChanged(newValue, this._rawValue)) {
+      this._rawValue = newValue
+      this._value = convert(newValue)
+      triggerEffects(this.dep)
     }
   }
 }
-export const ref = (value) => {
-  return new RefImpl(value)
+
+function convert(value) {
+  return isObject(value) ? reactive(value) : value
 }
-export const trackRefValue = (ref) => {
-  if(isTracking()) {
+
+function trackRefValue(ref) {
+  if (isTracking()) {
     trackEffects(ref.dep)
   }
 }
 
-const convert = (value) => {
-  return isObject(value) ? reactive(value) : value
+export function ref(value) {
+  return new RefImpl(value)
 }
 
-export const isRef = (ref) => {
+export function isRef(ref) {
   return !!ref.__v_isRef
 }
-export const unRef = (ref) => {
+
+export function unRef(ref) {
   return isRef(ref) ? ref.value : ref
 }
 
-export const proxyRefs = (objectWithRefs) => {
+export function proxyRefs(objectWithRefs) {
   return new Proxy(objectWithRefs, {
     get(target, key) {
       return unRef(Reflect.get(target, key))
     },
     set(target, key, value) {
-      if(isRef(target[key]) && !isRef(value)) {
-        return (target[key].value =  value)
+      if (isRef(target[key]) && !isRef(value)) {
+        return target[key].value = value
       } else {
-        return Reflect.set(target, key, value);
+        return Reflect.set(target, key, value)
       }
     }
   })
-
 }

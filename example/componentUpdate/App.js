@@ -1,11 +1,3 @@
-/*
- * @Author: Lqf
- * @Date: 2022-01-09 14:57:19
- * @LastEditors: Lqf
- * @LastEditTime: 2022-01-09 15:03:05
- * @Description: 我添加了修改
- */
-
 import { h, ref } from "../../lib/mini-vue3.esm.js"
 import Child from "./Child.js"
 

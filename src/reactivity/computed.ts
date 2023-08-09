@@ -1,4 +1,4 @@
-import { ActiveEffect } from "./effect"
+import { ReactiveEffect } from "./effect"
 
 export class ComputedRefImpl {
   private _getter: any
@@ -7,7 +7,7 @@ export class ComputedRefImpl {
   private _effect: any
   constructor(getter) {
     this._getter = getter
-    this._effect = new ActiveEffect(getter, ()=> {
+    this._effect = new ReactiveEffect(getter, ()=> {
       if(!this._dirty) {
         this._dirty = true
       }
