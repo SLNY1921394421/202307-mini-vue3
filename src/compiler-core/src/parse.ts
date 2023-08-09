@@ -24,26 +24,32 @@ function parseChildren(context) {
     }
   }
 
+  // 如果 node 没有值说明不是插值或者 element 认为是一个普通字符串
+  if(!node) {
+    node = parseText(context)
+  }
+
 
   nodes.push(node);
   return nodes;
 }
 
 function parseInterpolation(context) {
-  const openDelimiter = "{{";
-  const closeDelimiter = "}}";
-
+  // {{message}}
+  // 这个过程是不断推进的，所以能看到字符串被处理过的部分都是被截取掉的
+  // 剩下的都是没有被处理的
+  const openDelimiter = '{{'
+  const closeDelimiter = '}}'
   const closeIndex = context.source.indexOf(
     closeDelimiter,
     openDelimiter.length
-  );
-
-  advanceBy(context, openDelimiter.length)
-  const rawContextLength = closeIndex - openDelimiter.length;
-  const rawContent = context.source.slice(0, rawContextLength);
-  const content = rawContent.trim();
-
-  advanceBy(context, rawContextLength + closeDelimiter.length);
+  )
+  advanceBy(context, openDelimiter.length) // 截掉前面两个字符"{{"，并推进
+  const rowContentLength = closeIndex - openDelimiter.length // 计算中间内容的长度
+  const rawcontent = context.source.slice(0, rowContentLength)
+  parseTextData(context, rowContentLength) // 拿到真实的内容，并删除处理完的数据并推进
+  const content = rawcontent.trim() // 边缘处理
+  advanceBy(context, closeDelimiter.length) // 在 parseTextData 中已经推进了内容的长度，再次经closeDelimiter删除并推进即可
 
   return {
     type: NodeTypes.INTERPOLATION,
@@ -101,5 +107,31 @@ function parseTag(context: any, type: TagType) {
     type: NodeTypes.ELEMENT,
     tag,
   }
+}
+
+function parseText(context: any): any {
+  let endIndex = context.source.length
+
+  // 获取内容，并删除和推进
+  const content = parseTextData(context, endIndex)
+  return {
+    type: NodeTypes.TEXT,
+    content: content,
+  }
+}
+
+/**
+ * 获取文本内容并推进
+ * @param context context
+ * @param length 要删除并推进的长度
+ */
+function parseTextData(context: any, length: number) {
+  // 1.获取内容
+  const content = context.source.slice(0, length)
+
+  // 2.删除解析过的字符并推进
+  advanceBy(context, length)
+
+  return content
 }
 

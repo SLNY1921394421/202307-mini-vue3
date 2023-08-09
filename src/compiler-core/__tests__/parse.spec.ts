@@ -32,16 +32,16 @@ describe('Parse', () => {
   })
 
   // text 类型编译
-  // describe('text', () => {
-  //   it('simple text', () => {
-  //     const ast = baseParse('some text')
+  describe('text', () => {
+    it('simple text', () => {
+      const ast = baseParse('some text')
 
-  //     expect(ast.children[0]).toStrictEqual({
-  //       type: NodeTypes.TEXT,
-  //       content: 'some text',
-  //     })
-  //   })
-  // })
+      expect(ast.children[0]).toStrictEqual({
+        type: NodeTypes.TEXT,
+        content: 'some text',
+      })
+    })
+  })
 
   // element与text以及插值混合情况
   // test('parsing mixed cases', () => {
