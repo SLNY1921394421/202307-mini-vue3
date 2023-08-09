@@ -1,11 +1,3 @@
-/*
- * @Author: Lqf
- * @Date: 2022-01-09 16:24:44
- * @LastEditors: Lqf
- * @LastEditTime: 2022-01-09 20:45:15
- * @Description: 我添加了修改
- */
-
 import { h, ref, getCurrentInstance, nextTick } from "../../lib/mini-vue3.esm.js"
 
 export default {
