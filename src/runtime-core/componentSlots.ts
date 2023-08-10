@@ -1,4 +1,4 @@
-import { ShapeFlags } from "../../shared/shapeFlags";
+import { ShapeFlags } from "../shared/shapeFlags";
 export const initSlots = (instance, children) => {
   // instance.slots = Array.isArray(children) ? children : [children]
   // const slots = {}

@@ -1,4 +1,4 @@
-import { hasOwn } from '../../shared/index'
+import { hasOwn } from '../shared/index'
 
 const publicPropertiesMap: { [key: string]: any } = {
   $el: (instance: any) => instance.vnode.el,

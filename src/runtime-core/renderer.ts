@@ -1,6 +1,6 @@
 import { effect } from "../reactivity/effect"
-import { EMPTY_OBJ } from "../../shared"
-import { ShapeFlags } from "../../shared/shapeFlags"
+import { EMPTY_OBJ } from "../shared"
+import { ShapeFlags } from "../shared/shapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
 import { shouldUpdateComponent } from "./componentUpdateUtils"
 import { createAppAPI } from "./createApp"
